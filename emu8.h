@@ -8,6 +8,7 @@
 #define SCREEN_HEIGHT 32
 
 #include <SDL2/SDL.h>
+#include "keyboard.h"
 
 typedef struct {
     unsigned char memory[MEMORY_SIZE];
@@ -19,7 +20,7 @@ typedef struct {
     unsigned char delay_timer;
     unsigned char sound_timer;
     unsigned char display[SCREEN_HEIGHT][SCREEN_WIDTH];
-    unsigned char keypad[16];
+    Keypad keypad;                      // Keyboard support.
     SDL_Window* window;                 // SDL window
     SDL_Renderer* renderer;             // SDL renderer
     SDL_Texture* texture;               // SDL texture for caching
