@@ -2,7 +2,6 @@
 #include "keyboard.h"
 
 void keypad_init(Keypad* keypad) {
-    // Initialize all keys to released state
     for (int i = 0; i < KEYPAD_SIZE; i++) {
         keypad->keys[i] = 0;
     }
@@ -28,7 +27,7 @@ void keypad_handle_event(Keypad* keypad, SDL_Event* event, int* running) {
                 case SDLK_x: keypad->keys[0x0] = 1; break;
                 case SDLK_c: keypad->keys[0xB] = 1; break;
                 case SDLK_v: keypad->keys[0xF] = 1; break;
-                case SDLK_ESCAPE: *running = 0; break; // Optional: Quit with Escape
+                case SDLK_ESCAPE: *running = 0; break;
             }
             break;
         case SDL_KEYUP:
@@ -52,4 +51,13 @@ void keypad_handle_event(Keypad* keypad, SDL_Event* event, int* running) {
             }
             break;
     }
+}
+
+int keypad_get_pressed_key(Keypad* keypad) {
+    for (int i = 0; i < KEYPAD_SIZE; i++) {
+        if (keypad->keys[i]) {
+            return i; // Return the first pressed key (0-F)
+        }
+    }
+    return -1; // No key pressed
 }

@@ -89,11 +89,11 @@ void execute_opcode(Emu8* emu8, unsigned short opcode) {
 
         case 0xE000: // Key-related opcodes
             switch (opcode & 0x00FF) {
-                case 0x9E: // SKP Vx (Skip if key pressed)
+                case 0x9E: // SKP Vx
                     if (emu8->keypad.keys[emu8->V[(opcode & 0x0F00) >> 8]])
                         emu8->pc += 2;
                     break;
-                case 0xA1: // SKNP Vx (Skip if key not pressed)
+                case 0xA1: // SKNP Vx
                     if (!emu8->keypad.keys[emu8->V[(opcode & 0x0F00) >> 8]])
                         emu8->pc += 2;
                     break;
@@ -109,12 +109,19 @@ void execute_opcode(Emu8* emu8, unsigned short opcode) {
                     emu8->V[(opcode & 0x0F00) >> 8] = emu8->delay_timer;
                     break;
 
-                case 0x15: // LD DT, Vx
-                    emu8->delay_timer = emu8->V[(opcode & 0x0F00) >> 8];
+                case 0x0A: // LD Vx, K (Wait for keypress)
+                    {
+                        int key = keypad_get_pressed_key(&emu8->keypad);
+                        if (key >= 0) {
+                            emu8->V[(opcode & 0x0F00) >> 8] = (unsigned char)key;
+                        } else {
+                            emu8->pc -= 2; // Stay on this instruction until a key is pressed
+                        }
+                    }
                     break;
 
-                case 0x29: // LD F, Vx
-                    emu8->I = emu8->V[(opcode & 0x0F00) >> 8] * 5;
+                case 0x15: // LD DT, Vx
+                    emu8->delay_timer = emu8->V[(opcode & 0x0F00) >> 8];
                     break;
 
                 case 0x18: // LD ST, Vx
@@ -123,6 +130,10 @@ void execute_opcode(Emu8* emu8, unsigned short opcode) {
 
                 case 0x1E: // ADD I, Vx
                     emu8->I += emu8->V[(opcode & 0x0F00) >> 8];
+                    break;
+
+                case 0x29: // LD F, Vx
+                    emu8->I = emu8->V[(opcode & 0x0F00) >> 8] * 5;
                     break;
 
                 case 0x33: // LD B, Vx

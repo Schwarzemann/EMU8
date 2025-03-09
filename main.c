@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
     Emu8 emu8;
     init_emu8(&emu8);
 
-    cleanup_emu8(&emu8);
+    cleanup_emu8(&emu8); // Reset SDL state
     create_window_and_renderer(&emu8, scale, fullscreen);
 
     load_rom(&emu8, rom_file);
@@ -78,7 +78,7 @@ int main(int argc, char* argv[]) {
                     break;
                 case SDL_KEYDOWN:
                 case SDL_KEYUP:
-                    keypad_handle_event(&emu8.keypad, &event, &running); // Handle key events
+                    keypad_handle_event(&emu8.keypad, &event, &running);
                     break;
                 case SDL_WINDOWEVENT:
                     if (event.window.event == SDL_WINDOWEVENT_RESIZED) {

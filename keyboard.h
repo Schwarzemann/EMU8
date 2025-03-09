@@ -11,5 +11,6 @@ typedef struct {
 
 void keypad_init(Keypad* keypad);
 void keypad_handle_event(Keypad* keypad, SDL_Event* event, int* running);
+int keypad_get_pressed_key(Keypad* keypad); // Returns the pressed key (0-F) or -1 if none
 
 #endif // KEYBOARD_H
